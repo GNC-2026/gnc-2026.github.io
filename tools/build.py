@@ -10,6 +10,7 @@ TEAMS=X['teams']; TM={t['key']:t for t in TEAMS}; RET=X['ret']
 CATS=['A+','A','B+','B','WD'];SL={'A+':2,'A':2,'B+':5,'B':5,'WD':2};PROT={'A+':70000,'A':70000,'B+':70000,'B':30000,'WD':30000}
 QC={'A+':'#e8b931','A':'#3ddc84','B+':'#4d94ec','B':'#a97ef0','WD':'#f39237'}
 PURSE=985000
+PURSE_T={'FAAST FALCONS':945000,'SUPER SMAASHERS':945000}  # B-category owners
 e=html.escape
 def fmt(v):
   v=int(v);s=str(v);h,t=s[:-3],s[-3:]
@@ -28,7 +29,7 @@ def stats(k):
   for x in sales:
     if x['team']==k: cats[P[x['id']]['cat']]+=1;sp+=x['price'];lst.append(dict(id=x['id'],price=x['price'],t=x.get('t',0)))
   op={c:max(0,SL[c]-cats[c]) for c in CATS};prot=sum(op[c]*PROT[c] for c in CATS)
-  return dict(cats=cats,lst=lst,rem=PURSE-sp,spent=sp,count=len(lst),open=op,prot=prot)
+  return dict(cats=cats,lst=lst,rem=PURSE_T.get(k,PURSE)-sp,spent=sp,count=len(lst),open=op,prot=prot)
 catbar=''.join(f'<div class="c" style="--q:{QC[c]}"><b>{c}</b><i><u style="width:{round(100*(sum(1 for r in RET if P[r["id"]]["cat"]==c)+sum(1 for x in sales if P[x["id"]]["cat"]==c))/(SL[c]*6))}%"></u></i><em>{sum(1 for r in RET if P[r["id"]]["cat"]==c)+sum(1 for x in sales if P[x["id"]]["cat"]==c)}/{SL[c]*6}</em></div>' for c in CATS)
 teams=''
 for t in TEAMS:
