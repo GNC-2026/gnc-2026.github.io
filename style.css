@@ -83,3 +83,7 @@ footer{margin-top:18px;text-align:center;color:var(--dim);font-size:12px}
 #sov .spr{font:700 clamp(44px,6vw,86px) "Barlow Condensed";margin-top:8px}
 #sov .sd{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:var(--muted);font-size:12px;letter-spacing:2px;text-transform:uppercase}
 #cf{position:fixed;inset:0;pointer-events:none;z-index:60}
+.sqsearch{display:flex;align-items:center;gap:12px;margin-top:16px}
+.sqsearch input{flex:0 1 380px;min-width:0;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:10px 14px;font:inherit;font-size:15px}
+.sqsearch input:focus{outline:2px solid var(--gold);outline-offset:1px}
+.sqsearch span{color:var(--muted);font-size:13px}
