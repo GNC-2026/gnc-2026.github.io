@@ -82,7 +82,7 @@ page=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="
 <link rel="icon" href="img/club.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;600&display=swap">
 <style>{open(HERE+'/style.css').read()}</style></head><body>
 <header><img class="club" src="img/club.png" alt=""><div><h1>GNC Badminton <span>Premier League</span> 2026</h1><p>Player auction · live scoreboard</p></div>
-<div class="upd"><i></i>Results as of {asof.strftime("%-I:%M %p").lower()} · updates about every minute</div></header>
+<div class="upd"><i></i><span id="asof">Results as of {asof.strftime("%-I:%M %p").lower()} · updates about every minute</span></div><div class="tvb"><button id="bAuto" type="button" title="Switch between Scoreboard and Squads every minute">Auto-switch: off</button><button id="bFs" type="button">⛶ Full screen</button></div></header>
 <nav class="tabs"><a href="#scoreboard" data-t="scoreboard">Scoreboard</a><a href="#squads" data-t="squads">Squads</a><a href="#players" data-t="players">Players</a><a href="#rules" data-t="rules">Rules</a></nav>
 <main id="v-scoreboard" class="view"><div class="L"><div class="kp"><div><b>{len(sales)+len(RET)}/96</b><span>Players signed</span></div><div><b>{fmt(spent)}</b><span>Total spent</span></div><div><b>{fmt(top[0]["price"]) if top else "–"}</b><span>Top buy{(" · "+e(P[top[0]["id"]]["name"].split()[0])) if top else ""}</span></div><div><b>{len(sales)}</b><span>Sold at auction</span></div></div>
 <div class="cats">{catbar}</div><div class="teams">{teams}</div></div>
@@ -106,8 +106,8 @@ const sqq=document.getElementById('sqq');sqq.oninput=()=>{{const v=sqq.value.tri
 try{{const y=sessionStorage.getItem('y');if(y)scrollTo(0,+y)}}catch(e){{}}
 // SOLD moments: every sale this viewer hasn't seen yet (under 5 min old, at most 4), oldest first; a first-time visitor sees only the newest
 let sov=false;
-(function(){{if(!LAST.length)return;let seen=null;try{{seen=localStorage.getItem('seen')}}catch(e){{}}
- const newest=LAST[LAST.length-1].t;try{{localStorage.setItem('seen',newest)}}catch(e){{}}
+function sold(LAST){{if(!LAST.length)return;let seen=null;try{{seen=localStorage.getItem('seen')}}catch(e){{}}
+ const newest=LAST[LAST.length-1].t;if(seen===null&&window._sn)seen=window._sn;window._sn=String(newest);try{{localStorage.setItem('seen',newest)}}catch(e){{}}
  let q=LAST.filter(x=>Date.now()-x.t<300000&&(seen===null?x.t===newest:x.t>+seen)).slice(-4);
  if(!q.length)return;
  const o=document.getElementById('sov');let i=0,tm=null;sov=true;
@@ -117,9 +117,32 @@ let sov=false;
   clearTimeout(tm);tm=setTimeout(next,q.length>1?3500:5000)}};
  const next=()=>{{i++;if(i<q.length)show();else{{clearTimeout(tm);o.hidden=true;sov=false}}}};
  o.onclick=next;show();
-}})();
+}}
+sold(LAST);
 function confetti(cols){{const c=document.getElementById('cf'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;const ps=Array.from({{length:160}},()=>({{x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,vx:(Math.random()-.5)*4,vy:2+Math.random()*4,r:Math.random()*6.28,s:6+Math.random()*6,col:cols[Math.floor(Math.random()*cols.length)]}}));let n=0;(function f(){{x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{{p.x+=p.vx;p.y+=p.vy;p.vy+=.05;p.r+=.1;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.col;x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore()}});if(++n<220)requestAnimationFrame(f);else x.clearRect(0,0,c.width,c.height)}})()}}
-setInterval(()=>{{if(sov)return;const v=location.hash.slice(1)||'scoreboard';if((v==='scoreboard'||(v==='squads'&&!sqq.value))&&!document.hidden&&!document.querySelector('details[open]')){{try{{sessionStorage.setItem('y',scrollY)}}catch(e){{}}location.reload()}}}},15000);
+// fresh results every 15 s without reloading the page (so full screen stays on): fetch the latest copy and swap the live parts in
+async function refresh(){{if(sov||document.hidden)return;try{{
+ const r=await fetch(location.pathname+'?r='+Date.now(),{{cache:'no-store'}});if(!r.ok)return;const d=new DOMParser().parseFromString(await r.text(),'text/html');
+ const op=[...document.querySelectorAll('#v-scoreboard details.t')].map(x=>x.open);
+ [['#v-scoreboard',''],['#v-squads .sqs',''],['#v-players .grid',''],['#asof','']].forEach(([q])=>{{const a=document.querySelector(q),b=d.querySelector(q);if(a&&b&&a.innerHTML!==b.innerHTML)a.innerHTML=b.innerHTML}});
+ document.querySelectorAll('#v-scoreboard details.t').forEach((x,i)=>{{if(op[i])x.open=true}});
+ sqq.oninput();ap();
+ const m=[...d.scripts].map(x=>x.textContent).find(t=>t.startsWith('const LAST='));if(m)sold(JSON.parse(m.slice(11,-1)));
+}}catch(e){{}}}}
+setInterval(refresh,15000);
+// TV helpers: full screen, and auto-switch between Scoreboard (90 s) and Squads (60 s, scrolling slowly if it is taller than the screen)
+const bFs=document.getElementById('bFs'),bAuto=document.getElementById('bAuto');
+if(!document.fullscreenEnabled)bFs.hidden=true;
+bFs.onclick=()=>{{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{{}})}};
+document.addEventListener('fullscreenchange',()=>{{const on=!!document.fullscreenElement;bFs.textContent=on?'Exit full screen':'⛶ Full screen';document.body.classList.toggle('fs',on);if(on&&!auto)setAuto(true)}});
+let auto=false,at=null,sc=null;
+const go=v=>{{history.replaceState(null,'','#'+v);show();scrollTo(0,0)}};
+function cycle(){{clearTimeout(at);cancelAnimationFrame(sc);if(!auto)return;const cur=location.hash.slice(1)||'scoreboard';const nx=cur==='scoreboard'?'squads':'scoreboard';go(nx);
+ if(nx==='squads'){{const t0=performance.now()+4000;const step=t=>{{const max=document.documentElement.scrollHeight-innerHeight;if(max>0&&t>t0)scrollTo(0,Math.min(max,(t-t0)/50000*max));if(t<t0+50000)sc=requestAnimationFrame(step)}};sc=requestAnimationFrame(step)}}
+ at=setTimeout(cycle,nx==='squads'?60000:90000)}}
+function setAuto(on){{auto=on;bAuto.textContent='Auto-switch: '+(on?'on':'off');bAuto.classList.toggle('on',on);try{{localStorage.setItem('auto',on?'1':'')}}catch(e){{}}clearTimeout(at);cancelAnimationFrame(sc);if(on){{go('scoreboard');at=setTimeout(cycle,90000)}}}}
+bAuto.onclick=()=>setAuto(!auto);
+try{{if(localStorage.getItem('auto'))setAuto(true)}}catch(e){{}}
 </script></body></html>'''
 open(out+'/index.html','w').write(page)
 print('built',len(sales),'sales',len(page),'bytes')
