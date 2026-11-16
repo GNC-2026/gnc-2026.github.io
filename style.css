@@ -93,3 +93,5 @@ footer{margin-top:18px;text-align:center;color:var(--dim);font-size:12px}
 .sqsearch input:focus{outline:2px solid var(--gold);outline-offset:1px}
 .sqsearch span{color:var(--muted);font-size:13px}
 .rlist .rt-team img,.rlist .rt-team .lg{display:block;flex:none}.rlist .rt-team{display:flex}
+.flt input{flex:1 1 220px;max-width:340px;min-width:0;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:9px 13px;font:inherit}
+.flt input:focus{outline:2px solid var(--gold);outline-offset:1px}
