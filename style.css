@@ -59,16 +59,21 @@ footer{margin-top:18px;text-align:center;color:var(--dim);font-size:12px}
 .pc .no{position:absolute;left:0;top:0;background:var(--gold);color:#1d1a08;font:700 14px "Barlow Condensed";padding:1px 8px;border-bottom-right-radius:8px}
 .pc .ct{position:absolute;right:6px;top:6px;color:#111;font:700 12px "Barlow Condensed";padding:1px 6px;border-radius:5px}
 .pc b{display:block;padding:7px 8px 0;font-size:13px;line-height:1.15}.pc small{display:block;padding:3px 8px 8px;font:700 12px "Barlow Condensed";letter-spacing:.4px;text-transform:uppercase;color:var(--tc)}
-.rules{max-width:980px;margin:16px auto 0}.rules h2{font:400 32px Anton;text-transform:uppercase;margin:0 0 6px}
-.rules .rule{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
-.rules .rn{width:40px;height:40px;border-radius:50%;background:var(--gold);color:#1d1a08;display:grid;place-items:center;font:700 20px "Barlow Condensed"}
-.rules h3{font:400 20px Anton;text-transform:uppercase;margin:6px 0 6px;color:var(--gold2)}.rules p{color:var(--muted);line-height:1.5;margin:0}.rules p+p{margin-top:8px}.rules p b{color:var(--ink)}
-.rules .ex{margin-top:10px;padding:10px 14px;border-left:3px solid var(--gold);background:rgba(255,255,255,.04);border-radius:0 8px 8px 0;line-height:1.5}
-.rules .ex small{display:block;font:700 12px "Barlow Condensed";letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}.rules .ex span{display:block}.rules .ex span+span{margin-top:4px}
-.rules table{width:100%;border-collapse:collapse;font-size:14px}.rules th{text-align:left;font:700 12px "Barlow Condensed";letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--line)}
-.rules td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.06)}.rules .r{text-align:right}.rules .tm{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font-weight:600}.rules .tm img{width:24px;height:24px;border-radius:50%;background:#fff}
-.rules .fn{display:block;font-size:13px;color:var(--dim);margin-top:6px}.rules tr.tot td{font-weight:700}
-.rules .ex table{display:block;overflow-x:auto}
+.rules{max-width:1000px;margin:16px auto 0}.rules h2{font:400 clamp(24px,2.4vw,34px) Anton;text-transform:uppercase;margin:0}.rsub{color:var(--muted);margin:6px 0 12px}
+.rlist{list-style:none;margin:0;padding:0}
+.rlist .rule{display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;padding:18px 0;border-bottom:1px solid var(--line)}
+.rlist .rn{width:40px;height:40px;border-radius:50%;background:var(--gold);color:#1d1a08;display:grid;place-items:center;font:700 20px "Barlow Condensed"}
+.rlist .rule>div>b{display:block;font:400 clamp(18px,1.6vw,22px)/1.15 Anton;text-transform:uppercase;color:var(--gold2);margin:6px 0 8px;letter-spacing:.3px}
+.rlist p{color:var(--muted);line-height:1.55;margin:0}.rlist p b{color:var(--ink);font-weight:600}.rlist p i{color:var(--dim)}
+.rlist .ex{margin-top:12px;padding:12px 16px;border-left:3px solid var(--gold);background:rgba(255,255,255,.04);border-radius:0 10px 10px 0;line-height:1.55;min-width:0}
+.rlist .ex small{display:block;font:700 12px "Barlow Condensed";letter-spacing:1.2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.rlist .ex span{display:block}.rlist .ex span+span{margin-top:6px}.rlist .ex b{color:var(--ink);font-weight:600}
+.rlist .rtab{overflow-x:auto;margin:4px 0;-webkit-overflow-scrolling:touch}
+.rlist table{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
+.rlist th{text-align:left;font:700 12px "Barlow Condensed";letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.rlist td{padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.06);white-space:nowrap}.rlist .r{text-align:right}.rlist tr.tot td{font-weight:700;border-top:1px solid var(--line)}
+.rlist .rt-team{display:inline-flex;align-items:center;gap:8px}.rlist .rt-team img,.rlist .rt-team .lg{width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px var(--tc)}.rlist .rt-team b{font-weight:600}
+.rlist .fn{display:block;font-size:13px;color:var(--dim);margin-top:8px;white-space:normal;line-height:1.45}
 @media (max-width:1200px){.sqs{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:640px){.sqs{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tabs{width:100%;justify-content:space-between}.tabs a{padding:6px 9px;font-size:12.5px;letter-spacing:.8px}}
 #sov{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,color-mix(in srgb,var(--tc) 55%,#000) 0%,rgba(0,0,0,.92) 70%);cursor:pointer;padding:16px;animation:fi .25s}
@@ -87,3 +92,4 @@ footer{margin-top:18px;text-align:center;color:var(--dim);font-size:12px}
 .sqsearch input{flex:0 1 380px;min-width:0;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:10px 14px;font:inherit;font-size:15px}
 .sqsearch input:focus{outline:2px solid var(--gold);outline-offset:1px}
 .sqsearch span{color:var(--muted);font-size:13px}
+.rlist .rt-team img,.rlist .rt-team .lg{display:block;flex:none}.rlist .rt-team{display:flex}
